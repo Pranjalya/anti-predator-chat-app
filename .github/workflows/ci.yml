@@ -1,4 +1,4 @@
-name: Continous Integration for Portfolio
+name: Build
 
 on: 
   pull_request:
