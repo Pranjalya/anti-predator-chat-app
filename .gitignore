@@ -2,11 +2,9 @@
 dataset/*
 app/node_modules/*
 app/node_modules
-app/src/store/firebase.js
 # Cordova
 app/src-cordova/platforms/*
 app/src-cordova/plugins/*
-app/public/cordova.js
 app/dist/*
 app/src-cordova/*
 node_modules
