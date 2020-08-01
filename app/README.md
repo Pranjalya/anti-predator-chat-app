@@ -1,6 +1,8 @@
-# SafeChat UI
+# Chary UI
 
-In Production : https://pranjalyatiwari.kaissa.in/safechat
+__Built with__ : _Vue.js and Quasar_
+
+In Production : https://pranjalyatiwari.kaissa.in/chary
 
 ## Project setup
 ```
