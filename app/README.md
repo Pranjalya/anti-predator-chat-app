@@ -1,4 +1,4 @@
-# SafeChat UI
+# Chary UI
 
 In Production : https://pranjalyatiwari.kaissa.in/safechat
 
