@@ -1,179 +1,218 @@
 import Vue from 'vue'
 import { firebaseAuth, firebaseDb } from './firebase'
 import router from '../router/index'
+import axios from 'axios'
 
 let messagesRef
 
 const state = {
-    userDetails: {},
-    users: {},
-    messages: {}
+	userDetails: {},
+	users: {},
+	messages: {},
 }
 
 const mutations = {
-    setUserDetails(state, payload) {
-        state.userDetails = payload
-    },
-    addUser(state, payload) {
-        Vue.set(state.users, payload.userId, payload.userDetails)
-    },
-    updateUser(state, payload) {
-        Object.assign(state.users[payload.userId], payload.userDetails)
-    },
-    addMessage(state, payload) {
-        Vue.set(state.messages, payload.messageId, payload.messageDetails)
-    },
-    clearMessages(state) {
-        state.messages = {}
-    }
+	setUserDetails(state, payload) {
+		state.userDetails = payload
+	},
+	addUser(state, payload) {
+		Vue.set(state.users, payload.userId, payload.userDetails)
+	},
+	updateUser(state, payload) {
+		Object.assign(state.users[payload.userId], payload.userDetails)
+	},
+	addMessage(state, payload) {
+		Vue.set(state.messages, payload.messageId, payload.messageDetails)
+	},
+	clearMessages(state) {
+		state.messages = {}
+	},
 }
 
 const actions = {
-    registerUser({ }, payload) {
-        firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
-            .then(response => {
-                console.log(response)
-                let userId = firebaseAuth.currentUser.uid
-                firebaseDb.ref('users/' + userId).set({
-                    name: payload.name,
-                    email: payload.email,
-                    age: payload.age,
-                    negativePoints: 0,
-                    ip: [payload.ip],
-                    online: true
-                })
-            })
-            .catch(error => {
-                console.log(error.message)
-                alert(error.message)
-            })
-    },
+	registerUser({}, payload) {
+		axios
+			.get('https://api.ipify.org?format=json')
+			.then(ip => {
+				console.log(ip)
+				firebaseAuth
+					.createUserWithEmailAndPassword(payload.email, payload.password)
+					.then(response => {
+						console.log(response)
+						let userId = firebaseAuth.currentUser.uid
+						firebaseDb.ref('users/' + userId).set({
+							name: payload.name,
+							email: payload.email,
+							age: payload.age,
+							negativePoints: 0,
+							ip: ip.data.ip,
+							online: true,
+						})
+					})
+					.catch(error => {
+						console.log(error.message)
+						alert(error.message)
+					})
+			})
+			.catch(err => {
+				alert(
+					"Sorry, there was some trouble. Please perform the ioperation again. Hope you aren't mad at us. 😅"
+				)
+			})
+	},
 
-    loginUser({ }, payload) {
-        firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
-            .then(response => {
-                console.log(response)
-            })
-            .catch(error => {
-                console.log(error.message)
-                alert(error.message)
-            })
-    },
+	loginUser({}, payload) {
+		firebaseAuth
+			.signInWithEmailAndPassword(payload.email, payload.password)
+			.then(response => {
+				console.log(response)
+			})
+			.catch(error => {
+				console.log(error.message)
+				alert(error.message)
+			})
+	},
 
-    logoutUser() {
-        firebaseAuth.signOut()
-    },
+	logoutUser() {
+		firebaseAuth.signOut()
+	},
 
-    // Handles user status 
-    handleAuthStateChanged({ commit, dispatch, state }) {
-        firebaseAuth.onAuthStateChanged(user => {
-            if (user) {
-                // User is logged in.
-                let userId = firebaseAuth.currentUser.uid
-                firebaseDb.ref('users/' + userId).once('value', snap => {
-                    let userDetails = snap.val()
-                    commit('setUserDetails', {
-                        name: userDetails.name,
-                        email: userDetails.email,
-                        age: userDetails.age,
-                        negativePoints: userDetails.negativePoints,
-                        userId: userId,
-                        ip: userDetails.ip
-                    })
-                })
-                dispatch('firebaseUpdateUser', {
-                    userId: userId,
-                    updates: {
-                        online: true
-                    }
-                })
-                dispatch('firebaseGetUsers')
-                router.push('/')
-            }
-            else {
-                // User is logged out.
-                dispatch('firebaseUpdateUser', {
-                    userId: state.userDetails.userId,
-                    updates: {
-                        online: false
-                    }
-                })
-                commit('setUserDetails', {})
-                router.replace('/auth')
-            }
-        })
-    },
+	uploadImage(avatar) {
+		if (avatar) {
+			let imageFileName
+			let imageToBeUploaded = {}
+			const uploadTask = firebaseDb
+				.ref('users/' + payload.userId)
+				.put({ image: avatar })
 
-    firebaseUpdateUser({ }, payload) {
-        if (payload.userId) {
-            firebaseDb.ref('users/' + payload.userId).update(payload.updates)
-        }
-    },
+			uploadTask.on(
+				'state_changed',
+				null,
+				err => {
+					this.props.showToast(0, err.message)
+				},
+				() => {
+					uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {})
+				}
+			)
+		} else {
+			this.updateUserInfo(false, null)
+		}
+	},
 
-    firebaseGetUsers({ commit }) {
-        firebaseDb.ref('users').on('child_added', snapshot => {
-            let userDetails = snapshot.val()
-            let userId = snapshot.key
-            commit('addUser', {
-                userId,
-                userDetails
-            })
-        })
+	// Handles user status
+	handleAuthStateChanged({ commit, dispatch, state }) {
+		firebaseAuth.onAuthStateChanged(user => {
+			if (user) {
+				// User is logged in.
+				let userId = firebaseAuth.currentUser.uid
+				firebaseDb.ref('users/' + userId).once('value', snap => {
+					let userDetails = snap.val()
+					commit('setUserDetails', {
+						name: userDetails.name,
+						email: userDetails.email,
+						age: userDetails.age,
+						negativePoints: userDetails.negativePoints,
+						userId: userId,
+						ip: userDetails.ip,
+					})
+				})
+				dispatch('firebaseUpdateUser', {
+					userId: userId,
+					updates: {
+						online: true,
+					},
+				})
+				dispatch('firebaseGetUsers')
+				router.push('/')
+			} else {
+				// User is logged out.
+				dispatch('firebaseUpdateUser', {
+					userId: state.userDetails.userId,
+					updates: {
+						online: false,
+					},
+				})
+				commit('setUserDetails', {})
+				router.replace('/auth')
+			}
+		})
+	},
 
-        firebaseDb.ref('users').on('child_changed', snapshot => {
-            let userDetails = snapshot.val()
-            let userId = snapshot.key
-            commit('updateUser', {
-                userId,
-                userDetails
-            })
-        })
-    },
+	firebaseUpdateUser({}, payload) {
+		if (payload.userId) {
+			firebaseDb.ref('users/' + payload.userId).update(payload.updates)
+		}
+	},
 
-    firebaseGetMessages({ commit, state }, otherUserId) {
-        let userId = state.userDetails.userId
-        messagesRef = firebaseDb.ref('chats/' + userId + '/' + otherUserId)
-        messagesRef.on('child_added', snapshot => {
-            let messageDetails = snapshot.val()
-            let messageId = snapshot.key
-            commit('addMessage', {
-                messageId,
-                messageDetails
-            })
-        })
-    },
+	firebaseGetUsers({ commit }) {
+		firebaseDb.ref('users').on('child_added', snapshot => {
+			let userDetails = snapshot.val()
+			let userId = snapshot.key
+			commit('addUser', {
+				userId,
+				userDetails,
+			})
+		})
 
-    firebaseStopGettingMessages({ commit }) {
-        if (messagesRef) {
-            messagesRef.off('child_added')
-            commit('clearMessages')
-        }
-    },
+		firebaseDb.ref('users').on('child_changed', snapshot => {
+			let userDetails = snapshot.val()
+			let userId = snapshot.key
+			commit('updateUser', {
+				userId,
+				userDetails,
+			})
+		})
+	},
 
-    firebaseSendMessage({ }, payload) {
-        firebaseDb.ref('chats/' + state.userDetails.userId + '/' + payload.otherUserId).push(payload.message)
+	firebaseGetMessages({ commit, state }, otherUserId) {
+		let userId = state.userDetails.userId
+		messagesRef = firebaseDb.ref('chats/' + userId + '/' + otherUserId)
+		messagesRef.on('child_added', snapshot => {
+			let messageDetails = snapshot.val()
+			let messageId = snapshot.key
+			commit('addMessage', {
+				messageId,
+				messageDetails,
+			})
+		})
+	},
 
-        payload.message.from = 'them'
-        firebaseDb.ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId).push(payload.message)
-    }
+	firebaseStopGettingMessages({ commit }) {
+		if (messagesRef) {
+			messagesRef.off('child_added')
+			commit('clearMessages')
+		}
+	},
+
+	firebaseSendMessage({}, payload) {
+		firebaseDb
+			.ref('chats/' + state.userDetails.userId + '/' + payload.otherUserId)
+			.push(payload.message)
+
+		payload.message.from = 'them'
+		firebaseDb
+			.ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId)
+			.push(payload.message)
+	},
 }
 
 const getters = {
-    users: state => {
-        let usersFiltered = {}
-        Object.keys(state.users).forEach(key => {
-            if (key !== state.userDetails.userId) {
-                usersFiltered[key] = state.users[key]
-            }
-        })
-        return usersFiltered
-    }
+	users: state => {
+		let usersFiltered = {}
+		Object.keys(state.users).forEach(key => {
+			if (key !== state.userDetails.userId) {
+				usersFiltered[key] = state.users[key]
+			}
+		})
+		return usersFiltered
+	},
 }
 
 export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions,
-    getters
+	namespaced: true,
+	state,
+	mutations,
+	actions,
+	getters,
 }
