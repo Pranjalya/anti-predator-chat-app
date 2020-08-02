@@ -25,6 +25,10 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@tensorflow-models/toxicity": "^1.2.2",
+    "@tensorflow/tfjs": "^2.0.0",
+    "@tensorflow/tfjs-core": "^2.0.1",
+    "axios": "^0.19.2",
     "core-js": "^3.3.2",
     "firebase": "^7.16.0",
     "kind-of": ">=6.0.3",
