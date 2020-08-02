@@ -17,6 +17,7 @@
     />
     <q-input v-model="formData.email" class="q-mb-md" outlined type="email" label="Email" />
     <q-input v-model="formData.password" class="q-mb-md" outlined type="password" label="Password" />
+    <q-uploader :factory="factoryFn" v-if="tab == 'register'" style="max-width: 300px" @failed="uploadFailed"></q-uploader>
     <div class="row">
       <q-space />
       <q-btn color="primary" type="submit" :label="tab" />
@@ -38,6 +39,7 @@ export default {
         email: "",
         password: "",
         ip: "",
+        img: "",
       },
     };
   },
@@ -54,6 +56,43 @@ export default {
         this.registerUser(this.formData);
       }
     },
+    uploadFailed(req) {
+      console.log("failed", req);
+    },
+    factoryFn (file) {
+      // returning a Promise      
+      return new Promise((resolve, reject) => {
+        this.getBase64(file).then(data => {
+            // data is base64
+            console.log('base64', data)
+            this.formData.img = data;
+            // simulating a delay of 2 seconds
+            setTimeout(() => {
+              resolve({
+                url: 'http://localhost:4444/upload',
+                method: 'POST',
+                headers: [{name:'Content-Type',value:'application/json'}],
+                fields: [{name:'data',value:data}]
+              })
+            }, 2000)
+          }).catch(() => {
+            this.$q.notify({
+              color: 'negative',
+              message: 'Failed to convert file...'
+            })
+            reject()
+          })        
+      })
+    },
+    getBase64 (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        // reader.onloadend = (e) => resolve(imageToDataUri(e, 400, 400))
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+    }
   },
 };
 </script>

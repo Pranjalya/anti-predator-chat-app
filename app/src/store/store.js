@@ -40,6 +40,7 @@ const actions = {
                     age: payload.age,
                     negativePoints: 0,
                     ip: [payload.ip],
+                    img: payload.img,
                     online: true
                 })
             })
@@ -78,6 +79,7 @@ const actions = {
                         age: userDetails.age,
                         negativePoints: userDetails.negativePoints,
                         userId: userId,
+                        img: userDetails.img,
                         ip: userDetails.ip
                     })
                 })
