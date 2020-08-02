@@ -39,6 +39,7 @@ const actions = {
                     email: payload.email,
                     age: payload.age,
                     negativePoints: 0,
+                    ip: [payload.ip],
                     online: true
                 })
             })
@@ -76,7 +77,8 @@ const actions = {
                         email: userDetails.email,
                         age: userDetails.age,
                         negativePoints: userDetails.negativePoints,
-                        userId: userId
+                        userId: userId,
+                        ip: userDetails.ip
                     })
                 })
                 dispatch('firebaseUpdateUser', {

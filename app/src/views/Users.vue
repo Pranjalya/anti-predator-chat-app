@@ -43,6 +43,9 @@ export default {
   computed: {
     ...mapGetters("store", ["users"]),
   },
+  methods: {
+    onClick () {}
+  }
 };
 </script>
 

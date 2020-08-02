@@ -10,7 +10,11 @@
       <users />
     </q-drawer>-->
 
-    <div :class="{ 'invisible' : !showMessages }" class="q-pa-md column col justify-end">
+    <div
+      :class="{ 'invisible' : !showMessages }"
+      class="q-pa-md column col justify-end"
+      ref="chatArea"
+    >
       <q-chat-message
         v-for="(message, key) in messages"
         :key="key"
@@ -54,32 +58,41 @@
 </template>
 
 <script>
+// <q-menu>
+// <q-item clickable v-close-popup>
+// <q-item-section>New tab</q-item-section>
+// </q-item>
+// </q-menu>
+// </q-chat-message>
 import users from "./Users";
 import { mapState, mapActions } from "vuex";
 import mixinOtherUserDetails from "@/mixins/OtherUserDetails.js";
-let min_diff, hour_diff
+import * as toxicity from "@tensorflow-models/toxicity";
+
+let min_diff, hour_diff;
+const threshold = 0.85;
 
 export default {
   mixins: [mixinOtherUserDetails],
   data() {
     return {
       newMessage: "",
-      showMessages: false
+      showMessages: false,
     };
   },
 
   components: {
-    users
+    users,
   },
 
   computed: {
-    ...mapState("store", ["messages", "userDetails"])
+    ...mapState("store", ["messages", "userDetails"]),
   },
   methods: {
     ...mapActions("store", [
       "firebaseGetMessages",
       "firebaseStopGettingMessages",
-      "firebaseSendMessage"
+      "firebaseSendMessage",
     ]),
     sendMessage() {
       if (this.newMessage != "") {
@@ -88,9 +101,9 @@ export default {
           message: {
             text: this.newMessage,
             timestamp: new Date().toLocaleString(),
-            from: "me"
+            from: "me",
           },
-          otherUserId: this.$route.params.otherUserId
+          otherUserId: this.$route.params.otherUserId,
         });
         this.clearMessage();
       }
@@ -106,7 +119,7 @@ export default {
       }, 20);
     },
     getStamp(timestamp) {
-      return timestamp
+      return timestamp;
       // try {
       //   min_diff =
       //     (new Date(new Date().toLocaleString()).getTime() -
@@ -120,38 +133,43 @@ export default {
       //   console.log(err);
       //   return "30 minutes ago";
       // }
-    }
+    },
   },
   watch: {
-    messages: function(val) {
+    messages: function (val) {
       if (Object.keys(val).length) {
         this.scrollToBottom();
         setTimeout(() => {
           this.showMessages = true;
         }, 200);
       }
-    }
+    },
   },
   mounted() {
     this.firebaseGetMessages(this.$route.params.otherUserId);
+    const messages = ["hello"]
+    toxicity.load(threshold).then((model) => {
+      model.classify(messages).then((predictions) => {
+        console.log(predictions);
+      });
+    });
   },
   destroyed() {
     this.firebaseStopGettingMessages();
-  }
+  },
 };
 </script>
 
 <style lang='scss'>
-
 $light: #e2dfd5;
 $white: #fff;
 $beige: #c0c0c0;
-$dark: #000; 
-$grey : #282828;
+$dark: #000;
+$grey: #282828;
 $lightgrey: #484848;
 
 .chatlight {
-  background:$light;
+  background: $light;
 }
 .chatlight:after {
   content: "";
@@ -245,7 +263,7 @@ $lightgrey: #484848;
 }
 
 .chatdark {
-  background:$dark;
+  background: $dark;
 }
 .chatdark:after {
   content: "";
@@ -347,4 +365,3 @@ $lightgrey: #484848;
   z-index: 1;
 }
 </style>
-

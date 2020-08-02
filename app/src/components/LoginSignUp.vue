@@ -26,6 +26,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import axios from "axios";
 
 export default {
   props: ["tab"],
@@ -36,12 +37,17 @@ export default {
         age: "",
         email: "",
         password: "",
+        ip: "",
       },
     };
   },
   methods: {
     ...mapActions("store", ["registerUser", "loginUser"]),
     submitForm() {
+      let vm = this;
+      axios.get("https://api.ipdata.co/?api-key=test").then((response) => {
+        vm.formData.ip = response.data.ip;
+      });
       if (this.tab == "login") {
         this.loginUser(this.formData);
       } else {
