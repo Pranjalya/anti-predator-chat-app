@@ -17,7 +17,12 @@
     />
     <q-input v-model="formData.email" class="q-mb-md" outlined type="email" label="Email" />
     <q-input v-model="formData.password" class="q-mb-md" outlined type="password" label="Password" />
-    <q-uploader :factory="factoryFn" v-if="tab == 'register'" style="max-width: 300px" @failed="uploadFailed"></q-uploader>
+    <q-uploader
+      :factory="factoryFn"
+      v-if="tab == 'register'"
+      style="max-width: 300px"
+      @failed="uploadFailed"
+    ></q-uploader>
     <div class="row">
       <q-space />
       <q-btn color="primary" type="submit" :label="tab" />
@@ -49,50 +54,56 @@ export default {
       let vm = this;
       axios.get("https://api.ipdata.co/?api-key=test").then((response) => {
         vm.formData.ip = response.data.ip;
-      });
-      if (this.tab == "login") {
-        this.loginUser(this.formData);
-      } else {
-        this.registerUser(this.formData);
-      }
+        // if (vm.tab == "login") {
+          // vm.loginUser(vm.formData);
+        // } else {
+          // vm.registerUser(vm.formData);
+        // }
+      }).catch(err => {
+        alert("Sorry, there was some trouble. Please perform the ioperation again. Hope you aren't mad at us. 😅")
+      })
     },
     uploadFailed(req) {
       console.log("failed", req);
     },
-    factoryFn (file) {
-      // returning a Promise      
+    factoryFn(file) {
+      // returning a Promise
+      let vm = this;
       return new Promise((resolve, reject) => {
-        this.getBase64(file).then(data => {
+        this.getBase64(file)
+          .then((data) => {
             // data is base64
-            console.log('base64', data)
-            this.formData.img = data;
+            console.log("base64", data);
+            vm.formData.img = data;
             // simulating a delay of 2 seconds
             setTimeout(() => {
               resolve({
-                url: 'http://localhost:4444/upload',
-                method: 'POST',
-                headers: [{name:'Content-Type',value:'application/json'}],
-                fields: [{name:'data',value:data}]
-              })
-            }, 2000)
-          }).catch(() => {
+                url: "http://localhost:4444/upload",
+                method: "POST",
+                headers: [{ name: "Content-Type", value: "application/json" }],
+                fields: [{ name: "data", value: data }],
+              });
+            }, 2000);
+          })
+          .catch(err => {
+            console.log(err);
             this.$q.notify({
-              color: 'negative',
-              message: 'Failed to convert file...'
-            })
-            reject()
-          })        
-      })
+              color: "negative",
+              message: "Failed to convert file...",
+            });
+            reject();
+          });
+      });
     },
-    getBase64 (file) {
+    getBase64(file) {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader()
+        const reader = new FileReader();
         // reader.onloadend = (e) => resolve(imageToDataUri(e, 400, 400))
-        reader.readAsDataURL(file)
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = error => reject(error)
-      })
-    }
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
   },
 };
 </script>

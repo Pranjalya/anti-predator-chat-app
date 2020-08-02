@@ -23,7 +23,6 @@
         :sent="message.from == 'me' ? true : false"
         :bg-color="message.from == 'me' ? 'amber-7' : 'primary'"
         :text-color="message.from == 'me' ? 'black' : 'white'"
-        :stamp="getStamp(message.timestamp)"
       />
     </div>
     <q-footer elevated style="background-color: #010101">
@@ -58,6 +57,7 @@
 </template>
 
 <script>
+
 // <q-menu>
 // <q-item clickable v-close-popup>
 // <q-item-section>New tab</q-item-section>
