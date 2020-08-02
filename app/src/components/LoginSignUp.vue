@@ -29,12 +29,12 @@
 			type="password"
 			label="Password"
 		/>
-		<q-uploader
+		<!-- <q-uploader
 			:factory="factoryFn"
 			v-if="tab == 'register'"
 			style="max-width: 300px"
-			@failed="uploadFailed"
-		></q-uploader>
+			@failed="uploadFailed" 
+		></q-uploader>-->
 		<div class="row">
 			<q-space />
 			<q-btn color="primary" type="submit" :label="tab" />
