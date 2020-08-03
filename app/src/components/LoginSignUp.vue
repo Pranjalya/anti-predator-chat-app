@@ -43,7 +43,37 @@
 				</div>
 			</q-form>
 		</div>
-		<div class="col-xs-12 col-md-6">hello</div>
+		<div style="text-align: left;" class="col-xs-12 col-md-6">
+			<ul>
+				<li>
+					Our Aim is to create a platform where users can be free of cyber
+					bulling and harassment.
+				</li>
+				<li>
+					This app tracks the user messages to make sure that there are no toxic
+					messages shared.
+				</li>
+				<li>
+					This app also detects the pedophiles and predators.
+				</li>
+				<li>
+					These tasks are done by our ML models which check and flag each and
+					every messages and conversations.
+				</li>
+				<li>
+					If somehow, our model does not detect the toxic messages and
+					predators, users can use our report button to do report it manually.
+				</li>
+				<li>
+					If any user is termed as very toxic and/or a pedophile, we blacklist
+					their IPs so that that user cannot access our platform again.
+				</li>
+				<li>
+					Lastly, users can opt to share their conversations with us so that we
+					can improve our model.
+				</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
