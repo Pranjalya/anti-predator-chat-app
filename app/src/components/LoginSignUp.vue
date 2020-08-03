@@ -1,45 +1,50 @@
 <template>
-	<q-form @submit="submitForm" class="form">
-		<q-input
-			v-if="tab == 'register'"
-			v-model="formData.name"
-			class="q-mb-md form-input"
-			outlined
-			label="Name"
-		/>
-		<q-input
-			v-if="tab == 'register'"
-			v-model="formData.age"
-			class=" form-input"
-			outlined
-			type="number"
-			label="Age"
-		/>
-		<q-input
-			v-model="formData.email"
-			class=" form-input"
-			outlined
-			type="email"
-			label="Email"
-		/>
-		<q-input
-			v-model="formData.password"
-			class=" form-input"
-			outlined
-			type="password"
-			label="Password"
-		/>
-		<!-- <q-uploader
+	<div class="fit row wrap justify-around items-start content-start">
+		<div class=" col-xs-12 col-md-6">
+			<q-form @submit="submitForm" class="form">
+				<q-input
+					v-if="tab == 'register'"
+					v-model="formData.name"
+					class="q-mb-md form-input"
+					outlined
+					label="Name"
+				/>
+				<q-input
+					v-if="tab == 'register'"
+					v-model="formData.age"
+					class=" form-input"
+					outlined
+					type="number"
+					label="Age"
+				/>
+				<q-input
+					v-model="formData.email"
+					class=" form-input"
+					outlined
+					type="email"
+					label="Email"
+				/>
+				<q-input
+					v-model="formData.password"
+					class=" form-input"
+					outlined
+					type="password"
+					label="Password"
+				/>
+				<!-- <q-uploader
 			:factory="factoryFn"
 			v-if="tab == 'register'"
 			style="max-width: 300px"
 			@failed="uploadFailed" 
 		></q-uploader>-->
-		<div class="row">
-			<q-space />
-			<q-btn color="primary" type="submit" :label="tab" />
+				<div class="row mt-4">
+					<q-space />
+					<q-btn color="primary" type="submit" :label="tab" />
+				</div>
+			</q-form>
 		</div>
-	</q-form>
+		<div class="col-xs-12 col-md-6">hello</div>
+	</div>
 </template>
 
 <script>
