@@ -43,36 +43,18 @@
 				</div>
 			</q-form>
 		</div>
-		<div style="text-align: left;" class="col-xs-12 col-md-6">
-			<ul>
-				<li>
-					Our Aim is to create a platform where users can be free of cyber
-					bulling and harassment.
-				</li>
-				<li>
-					This app tracks the user messages to make sure that there are no toxic
-					messages shared.
-				</li>
-				<li>
-					This app also detects the pedophiles and predators.
-				</li>
-				<li>
-					These tasks are done by our ML models which check and flag each and
-					every messages and conversations.
-				</li>
-				<li>
-					If somehow, our model does not detect the toxic messages and
-					predators, users can use our report button to do report it manually.
-				</li>
-				<li>
-					If any user is termed as very toxic and/or a pedophile, we blacklist
-					their IPs so that that user cannot access our platform again.
-				</li>
-				<li>
-					Lastly, users can opt to share their conversations with us so that we
-					can improve our model.
-				</li>
-			</ul>
+		<div class="col-xs-12 col-md-6 tagline">
+			Chary is a platform where you can have a toxic less conversation with the
+			people in your life. <br />
+			Even you can help us to make a toxic free environment too!!
+			<div>
+				<q-img
+					transition="fade"
+					:src="require('@/assets/map.png')"
+					spinner-color="white"
+					class="rounded-borders world-img"
+				></q-img>
+			</div>
 		</div>
 	</div>
 </template>
@@ -195,6 +177,11 @@ export default {
 	position: relative;
 }
 
+.world-img {
+	width: 100%;
+	object-fit: contain;
+}
+
 .login-box .user-box input {
 	width: 100%;
 	padding: 10px 0;
@@ -215,6 +202,13 @@ export default {
 	color: #fff;
 	pointer-events: none;
 	transition: 0.5s;
+}
+
+.tagline {
+	font-size: 1.5rem;
+	font-weight: 600;
+	text-align: left;
+	color: #666;
 }
 
 .login-box .user-box input:focus ~ label,
