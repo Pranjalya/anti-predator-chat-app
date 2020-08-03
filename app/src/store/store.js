@@ -61,6 +61,40 @@ const actions = {
 			})
 	},
 
+	blockIP() {
+		if (ip) {
+			firebaseDb
+				.ref('blocked')
+				.push(ip, err =>
+					console.log(err ? 'error while pushing ip' : 'ip pushed successfully')
+				)
+		}
+	},
+
+	isBlockedIP() {
+		axios
+			.get('https://api.ipify.org?format=json')
+			.then(ip => {
+				console.log(ip.data.ip)
+				console.log('checkingIP')
+				var ref = firebaseDb.ref(`blocked`)
+				ref
+					.once('value')
+					.then(function(snap) {
+						var array = snap.val()
+						for (var i in array) {
+							var value = array[i]
+							if (value == ip.data.ip) {
+								window.location.href = '/404'
+								console.log('IP exists!!')
+							}
+						}
+					})
+					.catch(err => console.log(err))
+			})
+			.catch(err => console.error(err))
+	},
+
 	loginUser({}, payload) {
 		firebaseAuth
 			.signInWithEmailAndPassword(payload.email, payload.password)
