@@ -1,39 +1,62 @@
 <template>
-  <q-form @submit="submitForm" class="form">
-    <q-input
-      v-if="tab == 'register'"
-      v-model="formData.name"
-      class="q-mb-md form-input"
-      outlined
-      label="Name"
-    />
-    <q-input
-      v-if="tab == 'register'"
-      v-model="formData.age"
-      class="form-input"
-      outlined
-      type="number"
-      label="Age"
-    />
-    <q-input v-model="formData.email" class="form-input" outlined type="email" label="Email" />
-    <q-input
-      v-model="formData.password"
-      class="form-input"
-      outlined
-      type="password"
-      label="Password"
-    />
-    <!-- <q-uploader
+	<div class="fit row wrap justify-around items-start content-start">
+		<div class=" col-xs-12 col-md-6">
+			<q-form @submit="submitForm" class="form">
+				<q-input
+					v-if="tab == 'register'"
+					v-model="formData.name"
+					class="q-mb-md form-input"
+					outlined
+					label="Name"
+				/>
+				<q-input
+					v-if="tab == 'register'"
+					v-model="formData.age"
+					class=" form-input"
+					outlined
+					type="number"
+					label="Age"
+				/>
+				<q-input
+					v-model="formData.email"
+					class=" form-input"
+					outlined
+					type="email"
+					label="Email"
+				/>
+				<q-input
+					v-model="formData.password"
+					class=" form-input"
+					outlined
+					type="password"
+					label="Password"
+				/>
+				<!-- <q-uploader
 			:factory="factoryFn"
 			v-if="tab == 'register'"
 			style="max-width: 300px"
 			@failed="uploadFailed" 
-    ></q-uploader>-->
-    <div class="row">
-      <q-space />
-      <q-btn color="primary" type="submit" :label="tab" />
-    </div>
-  </q-form>
+		></q-uploader>-->
+				<div class="row mt-4">
+					<q-space />
+					<q-btn color="primary" type="submit" :label="tab" />
+				</div>
+			</q-form>
+		</div>
+		<div class="col-xs-12 col-md-6 tagline">
+			Chary is a platform where you can have a toxic less conversation with the
+			people in your life. <br />
+			Even you can help us to make a toxic free environment too!!
+			<div>
+				<q-img
+					transition="fade"
+					:src="require('@/assets/map.png')"
+					spinner-color="white"
+					class="rounded-borders world-img"
+				></q-img>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -154,6 +177,11 @@ export default {
   position: relative;
 }
 
+.world-img {
+	width: 100%;
+	object-fit: contain;
+}
+
 .login-box .user-box input {
   width: 100%;
   padding: 10px 0;
@@ -174,6 +202,13 @@ export default {
   color: #fff;
   pointer-events: none;
   transition: 0.5s;
+}
+
+.tagline {
+	font-size: 1.5rem;
+	font-weight: 600;
+	text-align: left;
+	color: #666;
 }
 
 .login-box .user-box input:focus ~ label,
