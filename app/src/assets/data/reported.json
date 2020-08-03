@@ -1,0 +1,15 @@
+[
+    {
+        "message": "you suck",
+        "toxicity": 1,
+        "labels": {
+            "toxicity": true,
+            "severe_toxicity": false,
+            "identity_attack": false,
+            "insult": false,
+            "obscene": false,
+            "sexually_explicit": false,
+            "threat": false
+        }
+    }
+]
