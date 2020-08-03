@@ -30,7 +30,6 @@ const mutations = {
 }
 
 const actions = {
-<<<<<<< HEAD
     registerUser({ }, payload) {
         axios
             .get('https://api.ipify.org?format=json')
@@ -200,7 +199,6 @@ const actions = {
             .ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId)
             .push(payload.message)
     },
-=======
 	registerUser({}, payload) {
 		axios
 			.get('https://api.ipify.org?format=json')
@@ -400,7 +398,6 @@ const actions = {
 			.ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId)
 			.push(payload.message)
 	},
->>>>>>> 0fdd2e992e409bfafb07814637346f23d098f7d7
 }
 
 const getters = {
