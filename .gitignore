@@ -8,3 +8,4 @@ app/src-cordova/plugins/*
 app/dist/*
 app/src-cordova/*
 node_modules
+ml/toxic_generator_api/.env
