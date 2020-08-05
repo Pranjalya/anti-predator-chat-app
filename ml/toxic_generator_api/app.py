@@ -1,9 +1,16 @@
-from flask import Flask, request, jsonify
-import gdown
-from fastai.basic_train import load_learner
-from flask_cors import CORS,cross_origin
-import random
 import os
+import random
+import gdown
+
+import torch
+import fastai
+from fastai.basic_train import load_learner
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
+
+
+#fastai.device = torch.device('cpu')
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -21,37 +28,45 @@ gdown.download(url, output, quiet=True)
 learn = load_learner(path='./model', file='export.pkl')
 
 
-def get_sentences(request):
+def get_sentences():
     """
     Function to return new set of abuses.
     """
-    shower_me = 35
+    shower_me = 20
     toxic_counter = 0
     all_toxics = []
 
-    for i in range(250):
-        sent = learn.predict("xxbos ", n_words=50, temperature=0.8)
+    for i in range(30):
+        sent = learn.predict("xxbos ", n_words=40, temperature=0.8)
         sents = sent.split("xxbos ")
         sents = sents[1:-1]
 
         for sent in sents:
-            sent = sent.replace("xxbos","").strip()
+            sent = sent.replace("xxbos", "").strip()
             if(sent):
                 all_toxics.append(sent)
                 toxic_counter = toxic_counter+1
 
         if toxic_counter > shower_me:
             break
-    
+
     toxics = random.sample(all_toxics, 10)
 
-    return all_toxics
+    return toxics
 
+
+# default route
+@app.route("/")
+def default():
+    return 'Please use right end point'
 
 # route for prediction
 @app.route('/gettoxic', methods=['POST'])
 def predict():
-    return jsonify(get_sentences(request))
+    toxic_sentences = get_sentences()
+    result_toxic_dict = result_dict = {'toxic_sentences': toxic_sentences}
+    return jsonify(result_toxic_dict)
+
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port='6000')

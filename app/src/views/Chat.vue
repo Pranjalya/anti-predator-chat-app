@@ -17,7 +17,7 @@
     <q-drawer v-model="left" side="left" elevated>
       <users />
     </q-drawer>-->
-    <div v-if="otherUserDetails.name!='Chary ChatBot'">
+    <!-- <div v-if="otherUserDetails.name!='Chary ChatBot'"> -->
       <div
         :class="{ invisible: !showMessages }"
         class="q-pa-md column col justify-end"
@@ -133,10 +133,10 @@
           </q-toolbar>
         </q-footer>
       </div>
-    </div>
-    <div v-else>
+    <!-- </div> -->
+    <!-- <div v-else>
       <chatbot />
-    </div>
+    </div> -->
   </q-page>
 </template>
 
@@ -268,19 +268,19 @@ export default {
     activateOnlineGroomingDetector() {},
     checkToxicity(message) {
       var res = false;
-      tf.engine().startScope();
-      toxicity
-        .load(threshold, ["toxicity"])
-        .then((model) => {
-          // Now you can use the `model` object to label sentences.
-          model.classify([message.text]).then((predictions) => {
-            message.blur = true;
-            res = predictions[0].results[0].match;
-            console.log("Result. ", res);
-          });
-        })
-        .catch((err) => console.log);
-      tf.engine().endScope();
+      // tf.engine().startScope();
+      // toxicity
+      //   .load(threshold, ["toxicity"])
+      //   .then((model) => {
+      //     // Now you can use the `model` object to label sentences.
+      //     model.classify([message.text]).then((predictions) => {
+      //       message.blur = true;
+      //       res = predictions[0].results[0].match;
+      //       console.log("Result. ", res);
+      //     });
+      //   })
+      //   .catch((err) => console.log);
+      // tf.engine().endScope();
       return res;
     },
   },
