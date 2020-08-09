@@ -1,9 +1,10 @@
+from tqdm import tqdm
+import pandas as pd
+import json
+import xmltodict
 import os
 os.system('pip install xmltodict')
-import xmltodict
-import json
-import pandas as pd
-from tqdm import tqdm
+
 
 class ExtractText():
     def __init__(self, filename, predators, out_folder='./'):
@@ -15,11 +16,11 @@ class ExtractText():
         '''
         self.filename = filename
         self.predators = predators
-        if (out_folder[-1]=='/'):
+        if (out_folder[-1] == '/'):
             self.out_folder = out_folder
         else:
             self.out_folder = out_folder + '/'
-        
+
         try:
             os.mkdir(self.out_folder)
         except:
@@ -74,7 +75,10 @@ class ExtractText():
                 authors.add(d['author'])
                 data.append(d)
             for d in data[-1*len_conv:]:
-                d['predator_conversation'] = 1 if any((True for x in self.predators if x in authors)) else 0
+                d['predator_conversation'] = 1 if any(
+                    (True for x in self.predators if x in authors)) else 0
         df = pd.DataFrame(data)
-        df = df [['@id', '@line', 'author', 'time', 'text', 'sequence', 'sexual_predator', 'predator_conversation']]
-        df.to_csv(self.out_folder + self.filename.split('/')[-1].rstrip('xml') + 'csv', index=False)
+        df = df[['@id', '@line', 'author', 'time', 'text',
+                 'sequence', 'sexual_predator', 'predator_conversation']]
+        df.to_csv(self.out_folder + self.filename.split('/')
+                  [-1].rstrip('xml') + 'csv', index=False)

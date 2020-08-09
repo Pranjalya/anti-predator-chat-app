@@ -61,6 +61,8 @@ def default():
     return 'Please use right end point'
 
 # route for prediction
+
+
 @app.route('/gettoxic', methods=['POST'])
 def predict():
     toxic_sentences = get_sentences()
