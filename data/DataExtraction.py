@@ -1,8 +1,9 @@
+import pandas as pd
+import json
+import xmltodict
 import os
 os.system('pip install xmltodict')
-import xmltodict
-import json
-import pandas as pd
+
 
 class ExtractText():
     def __init__(self, filename, out_folder='./'):
@@ -12,11 +13,11 @@ class ExtractText():
                out_folder -> Path to output folder
         '''
         self.filename = filename
-        if (out_folder[-1]=='/'):
+        if (out_folder[-1] == '/'):
             self.out_folder = out_folder
         else:
             self.out_folder = out_folder + '/'
-        
+
         try:
             os.mkdir(self.out_folder)
         except:
@@ -66,5 +67,6 @@ class ExtractText():
                 d['@id'] = id
                 data.append(d)
         df = pd.DataFrame(data)
-        df = df [['@id', '@line', 'author', 'time', 'text']]
-        df.to_csv(self.out_folder + self.filename.split('/')[-1].rstrip('xml') + 'csv', index=False)
+        df = df[['@id', '@line', 'author', 'time', 'text']]
+        df.to_csv(self.out_folder + self.filename.split('/')
+                  [-1].rstrip('xml') + 'csv', index=False)
